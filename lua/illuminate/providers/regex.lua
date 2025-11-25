@@ -12,9 +12,8 @@ local END_WORD_REGEX = vim.regex([[\k*$]])
 -- fOo
 local function get_cur_word(bufnr, cursor)
     local line = vim.api.nvim_buf_get_lines(bufnr, cursor[1], cursor[1] + 1, false)[1]
-    -- Use character-aware slicing to handle multibyte characters correctly.
-    local left_part = vim.fn.strcharpart(line, 0, cursor[2])
-    local right_part = vim.fn.strcharpart(line, cursor[2], #line)
+    local left_part = string.sub(line, 0, cursor[2] + 1)
+    local right_part = string.sub(line, cursor[2] + 1)
     local start_idx, _ = END_WORD_REGEX:match_str(left_part)
     local _, end_idx = START_WORD_REGEX:match_str(right_part)
     local word = string.format('%s%s', string.sub(left_part, start_idx + 1), string.sub(right_part, 2, end_idx))
